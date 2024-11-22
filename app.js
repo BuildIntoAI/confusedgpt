@@ -1,15 +1,15 @@
-const apiKey = 'your-openai-api-key-here'; // Replace with your OpenAI API key
+const apiKey = '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';  // Make sure to insert your actual API key here!
 
-// Handle the "Send" button click
-document.getElementById('askQuestionButton').addEventListener('click', async function () {
+// Event listener for clicking the "Ask" button
+document.getElementById('askQuestionButton').addEventListener('click', async function() {
     const question = document.getElementById('input').value;
     if (question.trim() !== "") {
         await processQuestion(question);
     }
 });
 
-// Handle the "Enter" key press to submit the question
-document.getElementById('input').addEventListener('keypress', async function (event) {
+// Allow pressing 'Enter' to submit the question
+document.getElementById('input').addEventListener('keypress', async function(event) {
     if (event.key === 'Enter') {
         const question = document.getElementById('input').value;
         if (question.trim() !== "") {
@@ -18,99 +18,85 @@ document.getElementById('input').addEventListener('keypress', async function (ev
     }
 });
 
-// Update the status message (Pending, Success, Failure)
-function updateStatus(status) {
-    const statusMessage = document.getElementById('statusMessage');
-    statusMessage.textContent = status;
-    statusMessage.className = 'status-message ' + status.toLowerCase().replace(' ', '-');
-}
-
-// Process the user question and fetch the wrong answer
+// Process the question and get the wrong answer
 async function processQuestion(question) {
-    updateStatus('Pending...');
+    // Display the user question in the chat
+    addMessage('user', question);
 
-    try {
-        const wrongAnswer = await getWrongAnswer(question);
+    // Show the "Pending" status while waiting for the bot's response
+    showStatus('pending', 'Processing your question...');
 
-        // Show the user's question in the chat
-        addMessage('user', question);
+    // Clear the input box
+    document.getElementById('input').value = '';
 
-        // Clear the input field after submission
-        document.getElementById('input').value = '';
+    // Fetch the wrong answer from the API
+    const wrongAnswer = await getWrongAnswer(question);
 
-        // Show the bot's wrong answer in the chat
-        addMessage('bot', wrongAnswer);
+    // Display the bot's wrong answer in the chat
+    addMessage('bot', wrongAnswer);
 
-        // Update status to 'Success'
-        updateStatus('Success');
-    } catch (error) {
-        console.error("Error during question processing:", error);
-        updateStatus('Failure');
-    }
+    // Set the status to "success" after receiving the bot's response
+    showStatus('success', 'Response received!');
 }
 
-// Function to fetch the wrong answer from OpenAI API
+// Fetch the wrong answer from OpenAI API
 async function getWrongAnswer(question) {
     const apiEndpoint = "https://api.openai.com/v1/chat/completions";
 
-    // Log to see what is being sent
-    console.log("Sending request to OpenAI API with question:", question);
-
     try {
-        const response = await fetch(apiEndpoint, {
+        const correctResponse = await fetch(apiEndpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                model: "gpt-4", // Or "gpt-3.5-turbo" if you prefer
+                model: "gpt-4",  // Use GPT-4 or GPT-3.5-turbo based on your preference
                 messages: [{ role: 'user', content: question }],
                 max_tokens: 100,
                 temperature: 0.7
             }),
         });
 
-        // Check for a successful response
-        if (!response.ok) {
-            const errorMessage = await response.text();
-            throw new Error(`API Request Failed: ${errorMessage}`);
-        }
+        const correctAnswer = await correctResponse.json();
+        let answerText = correctAnswer.choices[0].message.content;
 
-        const data = await response.json();
-        const correctAnswer = data.choices[0].message.content;
-
-        // Log the correct answer to verify it's being fetched
-        console.log("Received correct answer:", correctAnswer);
-
-        // Make the answer deliberately wrong (by reversing the text)
-        return makeWrongAnswer(correctAnswer);
-
+        // Deliberately alter the answer to make it wrong
+        return makeWrongAnswer(answerText);
     } catch (error) {
-        console.error("Error during API call:", error);
-        throw new Error("Failed to fetch answer from OpenAI API");
+        showStatus('failure', 'Something went wrong! Please try again.');
+        return "Sorry, I couldn't process your request at the moment.";
     }
 }
 
-// Function to deliberately make the correct answer wrong
+// Function to deliberately make the answer wrong
 function makeWrongAnswer(correctAnswer) {
+    // A simple approach: reverse the answer and add "wrong" notes
     let wrongAnswer = correctAnswer.split('').reverse().join('');
-    wrongAnswer += " (This is wrong!)"; // Add note to indicate it's wrong
+    wrongAnswer += " (This is wrong!)";
     return wrongAnswer;
 }
 
-// Function to add a new message to the chat window
+// Add a new message to the chat area
 function addMessage(sender, text) {
     const chatMessages = document.getElementById('chatMessages');
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', sender);
-
+    
     const textDiv = document.createElement('div');
+    textDiv.classList.add('text');
     textDiv.textContent = text;
-
+    
     messageDiv.appendChild(textDiv);
     chatMessages.appendChild(messageDiv);
-
-    // Scroll chat window to the bottom after new message
+    
+    // Scroll the chat container to the bottom
     chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Show the status message (pending, success, or failure)
+function showStatus(type, message) {
+    const statusMessage = document.getElementById('statusMessage');
+    statusMessage.textContent = message;
+    statusMessage.className = `status-message ${type}`;
 }
