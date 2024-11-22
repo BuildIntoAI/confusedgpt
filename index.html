@@ -1,212 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ConfusedBot - Chatbot</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    /* General reset and font */
-    body, html {
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-      background-color: #212121;
-      color: #e0e0e0;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConfusedBot</title>
 
-    /* Main container for chat window */
-    .chat-container {
-      width: 450px;
-      max-width: 100%;
-      height: 700px;
-      display: flex;
-      flex-direction: column;
-      background-color: #2C2F38;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-    }
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #121212; /* Dark background */
+            color: #EDEDED; /* Light text */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
 
-    /* Messages container */
-    #chatMessages {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column-reverse;
-      gap: 15px;
-    }
+        /* Main Chat Container */
+        .chat-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #2D2D2D;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            height: 80%;
+            overflow: hidden;
+        }
 
-    /* User and bot message styling */
-    .message {
-      max-width: 80%;
-      padding: 12px;
-      border-radius: 20px;
-      word-wrap: break-word;
-      font-size: 16px;
-      line-height: 1.4;
-    }
+        /* Header (Just a placeholder, no login) */
+        .chat-header {
+            background-color: #1E1E1E;
+            padding: 16px;
+            font-size: 18px;
+            text-align: center;
+            font-weight: bold;
+        }
 
-    .user {
-      background-color: #4a90e2;
-      align-self: flex-end;
-    }
+        /* Chat Message Area */
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
 
-    .bot {
-      background-color: #444;
-      align-self: flex-start;
-    }
+        /* User and Bot Message Styles */
+        .message {
+            display: flex;
+            max-width: 80%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
 
-    /* Input area and button styling */
-    #inputContainer {
-      display: flex;
-      padding: 10px;
-      background-color: #333;
-      border-top: 1px solid #444;
-    }
+        .user {
+            background-color: #4A90E2;
+            color: white;
+            align-self: flex-end;
+            border-radius: 8px 8px 0 8px;
+        }
 
-    #input {
-      flex: 1;
-      padding: 12px;
-      border-radius: 25px;
-      background-color: #444;
-      color: #fff;
-      font-size: 14px;
-      border: none;
-      outline: none;
-    }
+        .bot {
+            background-color: #333;
+            color: white;
+            align-self: flex-start;
+            border-radius: 8px 8px 8px 0;
+        }
 
-    #askQuestionButton {
-      padding: 12px 18px;
-      border-radius: 25px;
-      background-color: #4a90e2;
-      color: white;
-      border: none;
-      margin-left: 12px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.3s ease;
-    }
+        /* Chat Input Area */
+        .chat-input-area {
+            background-color: #1E1E1E;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
 
-    #askQuestionButton:hover {
-      background-color: #3d80d4;
-    }
+        .chat-input {
+            width: 100%;
+            padding: 12px;
+            background-color: #3E3E3E;
+            border-radius: 8px;
+            color: white;
+            border: none;
+            font-size: 16px;
+        }
 
-    /* Status text */
-    #status {
-      color: #f7a400;
-      font-size: 14px;
-      margin-top: 10px;
-      text-align: center;
-    }
+        .chat-input:focus {
+            outline: none;
+            background-color: #4A4A4A;
+        }
 
-  </style>
+        .send-button {
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .send-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Status Message */
+        .status-message {
+            font-size: 14px;
+            color: #FF7A00;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .status-success {
+            color: #28A745;
+        }
+
+        .status-failure {
+            color: #DC3545;
+        }
+    </style>
 </head>
+
 <body>
-
-  <div class="chat-container">
-    <!-- Chat messages display area -->
-    <div id="chatMessages"></div>
-
-    <!-- Input field and submit button -->
-    <div id="inputContainer">
-      <input id="input" type="text" placeholder="Ask a question..." />
-      <button id="askQuestionButton">Ask</button>
+    <div class="chat-container">
+        <div class="chat-header">ConfusedBot</div>
+        <div id="chatMessages" class="chat-messages">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div id="statusMessage" class="status-message">Ready to chat...</div>
+        <div class="chat-input-area">
+            <input type="text" id="input" class="chat-input" placeholder="Ask me anything...">
+            <button id="askQuestionButton" class="send-button">Send</button>
+        </div>
     </div>
 
-    <!-- Status message (for success/error) -->
-    <p id="status"></p>
-  </div>
+    <script>
+        const apiKey = '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'; // Replace with your OpenAI API key
 
-  <script>
-    const apiKey = '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'; 
+        document.getElementById('askQuestionButton').addEventListener('click', async function () {
+            const question = document.getElementById('input').value;
+            if (question.trim() !== "") {
+                await processQuestion(question);
+            }
+        });
 
-    // Event listener for the "Ask" button
-    document.getElementById('askQuestionButton').addEventListener('click', async function() {
-      const question = document.getElementById('input').value;
-      if (question.trim() !== "") {
-        await processQuestion(question);
-      }
-    });
+        document.getElementById('input').addEventListener('keypress', async function (event) {
+            if (event.key === 'Enter') {
+                const question = document.getElementById('input').value;
+                if (question.trim() !== "") {
+                    await processQuestion(question);
+                }
+            }
+        });
 
-    // Allow pressing 'Enter' to submit the question
-    document.getElementById('input').addEventListener('keypress', async function(event) {
-      if (event.key === 'Enter') {
-        const question = document.getElementById('input').value;
-        if (question.trim() !== "") {
-          await processQuestion(question);
+        // Function to update status message
+        function updateStatus(status) {
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = status;
+            statusMessage.className = 'status-message ' + status.toLowerCase().replace(' ', '-');
         }
-      }
-    });
 
-    // Function to process the question and get the wrong answer
-    async function processQuestion(question) {
-      addMessage('user', question); // Add user message to chat
-      document.getElementById('input').value = ''; // Clear the input field
-      document.getElementById('status').innerText = 'Pending...';
+        // Process the user question and get the wrong answer
+        async function processQuestion(question) {
+            updateStatus('Pending...');
 
-      try {
-        const wrongAnswer = await getWrongAnswer(question); // Fetch wrong answer
-        addMessage('bot', wrongAnswer); // Add bot message to chat
-        document.getElementById('status').innerText = 'Success';
-      } catch (error) {
-        addMessage('bot', "Sorry, something went wrong."); // Error message
-        document.getElementById('status').innerText = 'Error';
-      }
-    }
+            try {
+                const wrongAnswer = await getWrongAnswer(question);
 
-    // Fetch the wrong answer from OpenAI API
-    async function getWrongAnswer(question) {
-      const apiEndpoint = "https://api.openai.com/v1/chat/completions";
+                // Show the user's question
+                addMessage('user', question);
 
-      const correctResponse = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4", // Or "gpt-3.5-turbo" for an earlier model
-          messages: [{ role: 'user', content: question }],
-          max_tokens: 100,
-          temperature: 0.7
-        }),
-      });
+                // Clear the input
+                document.getElementById('input').value = '';
 
-      const correctAnswer = await correctResponse.json();
-      let answerText = correctAnswer.choices[0].message.content;
+                // Show the bot's wrong answer
+                addMessage('bot', wrongAnswer);
 
-      // Manipulate the answer to make it wrong
-      return makeWrongAnswer(answerText);
-    }
+                // Update status to 'Success'
+                updateStatus('Success');
+            } catch (error) {
+                updateStatus('Failure');
+                console.error("Error fetching answer:", error);
+            }
+        }
 
-    // Function to create a wrong answer by altering the correct response
-    function makeWrongAnswer(correctAnswer) {
-      let wrongAnswer = correctAnswer.split('').reverse().join('');
-      wrongAnswer += " (This is wrong!)"; // Add a tag to indicate it’s wrong
-      return wrongAnswer;
-    }
+        // Function to fetch the wrong answer from the OpenAI API
+        async function getWrongAnswer(question) {
+            const apiEndpoint = "https://api.openai.com/v1/chat/completions";
 
-    // Function to add a new message to the chat area
-    function addMessage(sender, text) {
-      const chatMessages = document.getElementById('chatMessages');
-      const messageDiv = document.createElement('div');
-      messageDiv.classList.add('message', sender);
+            const response = await fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify({
+                    model: "gpt-4", // Or "gpt-3.5-turbo" if you prefer
+                    messages: [{ role: 'user', content: question }],
+                    max_tokens: 100,
+                    temperature: 0.7
+                }),
+            });
 
-      const textDiv = document.createElement('div');
-      textDiv.classList.add('text');
-      textDiv.textContent = text;
+            if (!response.ok) {
+                throw new Error('Failed to fetch answer from API');
+            }
 
-      messageDiv.appendChild(textDiv);
-      chatMessages.appendChild(messageDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
-    }
-  </script>
+            const data = await response.json();
+            const correctAnswer = data.choices[0].message.content;
 
+            // Make the answer deliberately wrong (reverse it)
+            return makeWrongAnswer(correctAnswer);
+        }
+
+        // Deliberately make the answer wrong
+        function makeWrongAnswer(correctAnswer) {
+            let wrongAnswer = correctAnswer.split('').reverse().join('');
+            wrongAnswer += " (This is wrong!)";
+            return wrongAnswer;
+        }
+
+        // Add message to chat window
+        function addMessage(sender, text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+
+            const textDiv = document.createElement('div');
+            textDiv.textContent = text;
+
+            messageDiv.appendChild(textDiv);
+            chatMessages.appendChild(messageDiv);
+
+            // Scroll chat window to the bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
 </body>
+
 </html>
