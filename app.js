@@ -65,7 +65,7 @@ async function getWrongAnswer(question) {
         return makeWrongAnswer(answerText);
     } catch (error) {
         showStatus('failure', 'Something went wrong! Please try again.');
-        return "Sorry, I couldn't process your request at the moment.";
+        return "Sorry, I couldn't process your request at the moment, my ai brain is filled with potatoes!";
     }
 }
 
