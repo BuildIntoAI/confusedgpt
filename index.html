@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConfusedBot</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Chat container */
+        .chat-container {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        /* Header */
+        .chat-header {
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e1e1e1;
+            margin-bottom: 20px;
+        }
+
+        .chat-header h1 {
+            margin: 0;
+            color: #333;
+        }
+
+        /* Chat messages container */
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            max-height: 60%;
+        }
+
+        /* Chat bubbles */
+        .message {
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message.user {
+            align-items: flex-end;
+        }
+
+        .message.bot {
+            align-items: flex-start;
+        }
+
+        .message .text {
+            max-width: 75%;
+            padding: 10px;
+            border-radius: 15px;
+            background-color: #e5e5e5;
+            font-size: 1em;
+            color: #333;
+            word-wrap: break-word;
+        }
+
+        .message.user .text {
+            background-color: #4CAF50;
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.bot .text {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        /* Input box */
+        .chat-input-container {
+            display: flex;
+            align-items: center;
+            border-top: 2px solid #e1e1e1;
+            padding-top: 10px;
+        }
+
+        #input {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1em;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            box-sizing: border-box;
+            margin-right: 10px;
+            background-color: #f1f1f1;
+        }
+
+        #input:focus {
+            border: 2px solid #4CAF50;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        button:active {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <h1>ConfusedBot</h1>
+        <p>Ask anything and it will give you the wrong answer!</p>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+        <!-- Chat messages will go here -->
+    </div>
+
+    <div class="chat-input-container">
+        <input type="text" id="input" placeholder="Ask me anything..." autocomplete="off" />
+        <button id="askQuestionButton">Ask</button>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
