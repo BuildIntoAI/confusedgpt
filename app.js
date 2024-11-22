@@ -1,4 +1,4 @@
-const apiKey = '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'; 
+const apiKey = 'your-openai-api-key-here'; // Replace with your OpenAI API key
 
 // Handle the "Send" button click
 document.getElementById('askQuestionButton').addEventListener('click', async function () {
@@ -44,8 +44,8 @@ async function processQuestion(question) {
         // Update status to 'Success'
         updateStatus('Success');
     } catch (error) {
+        console.error("Error during question processing:", error);
         updateStatus('Failure');
-        console.error("Error fetching answer:", error);
     }
 }
 
@@ -53,29 +53,43 @@ async function processQuestion(question) {
 async function getWrongAnswer(question) {
     const apiEndpoint = "https://api.openai.com/v1/chat/completions";
 
-    const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-            model: "gpt-4", // Or "gpt-3.5-turbo" if you prefer
-            messages: [{ role: 'user', content: question }],
-            max_tokens: 100,
-            temperature: 0.7
-        }),
-    });
+    // Log to see what is being sent
+    console.log("Sending request to OpenAI API with question:", question);
 
-    if (!response.ok) {
-        throw new Error('Failed to fetch answer from API');
+    try {
+        const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+                model: "gpt-4", // Or "gpt-3.5-turbo" if you prefer
+                messages: [{ role: 'user', content: question }],
+                max_tokens: 100,
+                temperature: 0.7
+            }),
+        });
+
+        // Check for a successful response
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(`API Request Failed: ${errorMessage}`);
+        }
+
+        const data = await response.json();
+        const correctAnswer = data.choices[0].message.content;
+
+        // Log the correct answer to verify it's being fetched
+        console.log("Received correct answer:", correctAnswer);
+
+        // Make the answer deliberately wrong (by reversing the text)
+        return makeWrongAnswer(correctAnswer);
+
+    } catch (error) {
+        console.error("Error during API call:", error);
+        throw new Error("Failed to fetch answer from OpenAI API");
     }
-
-    const data = await response.json();
-    const correctAnswer = data.choices[0].message.content;
-
-    // Make the answer deliberately wrong (by reversing the text)
-    return makeWrongAnswer(correctAnswer);
 }
 
 // Function to deliberately make the correct answer wrong
