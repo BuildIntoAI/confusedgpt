@@ -1,153 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConfusedBot</title>
-    <style>
-        /* Global Styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConfusedBot</title>
+  <style>
+    /* Basic resets */
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #121212; /* Dark mode background */
+      color: #f5f5f5; /* Light text for dark mode */
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        /* Chat container */
-        .chat-container {
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 80vh;
-        }
+    .chat-container {
+      width: 350px;
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      background-color: #1c1c1c;
+      border-radius: 10px;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
 
-        /* Header */
-        .chat-header {
-            text-align: center;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e1e1e1;
-            margin-bottom: 20px;
-        }
+    /* Chat messages container */
+    #chatMessages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: scroll;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-        .chat-header h1 {
-            margin: 0;
-            color: #333;
-        }
+    .message {
+      max-width: 80%;
+      padding: 10px;
+      border-radius: 10px;
+    }
 
-        /* Chat messages container */
-        .chat-messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            max-height: 60%;
-        }
+    .user {
+      background-color: #3b82f6;
+      align-self: flex-end;
+    }
 
-        /* Chat bubbles */
-        .message {
-            margin: 10px 0;
-            display: flex;
-            flex-direction: column;
-        }
+    .bot {
+      background-color: #4b5563;
+      align-self: flex-start;
+    }
 
-        .message.user {
-            align-items: flex-end;
-        }
+    .text {
+      word-wrap: break-word;
+    }
 
-        .message.bot {
-            align-items: flex-start;
-        }
+    /* Input area */
+    #inputContainer {
+      display: flex;
+      padding: 10px;
+      background-color: #333;
+      border-top: 1px solid #444;
+    }
 
-        .message .text {
-            max-width: 75%;
-            padding: 10px;
-            border-radius: 15px;
-            background-color: #e5e5e5;
-            font-size: 1em;
-            color: #333;
-            word-wrap: break-word;
-        }
+    #input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #444;
+      background-color: #555;
+      color: #f5f5f5;
+      outline: none;
+    }
 
-        .message.user .text {
-            background-color: #4CAF50;
-            color: white;
-            margin-left: auto;
-        }
+    #askQuestionButton {
+      padding: 10px 20px;
+      border-radius: 20px;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
 
-        .message.bot .text {
-            background-color: #f1f1f1;
-            color: #333;
-        }
+    #askQuestionButton:hover {
+      background-color: #2563eb;
+    }
 
-        /* Input box */
-        .chat-input-container {
-            display: flex;
-            align-items: center;
-            border-top: 2px solid #e1e1e1;
-            padding-top: 10px;
-        }
-
-        #input {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 1em;
-            border: none;
-            border-radius: 25px;
-            outline: none;
-            box-sizing: border-box;
-            margin-right: 10px;
-            background-color: #f1f1f1;
-        }
-
-        #input:focus {
-            border: 2px solid #4CAF50;
-        }
-
-        button {
-            padding: 12px 20px;
-            font-size: 1em;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-        }
-
-        button:active {
-            background-color: #45a049;
-        }
-    </style>
+    /* Loading status */
+    #status {
+      color: #ff9800;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="chat-container">
-    <div class="chat-header">
-        <h1>ConfusedBot</h1>
-        <p>Ask anything and it will give you the wrong answer!</p>
+  <!-- Chatbot Container -->
+  <div class="chat-container">
+    <div id="chatMessages"></div>  <!-- Area for messages -->
+    <div id="inputContainer">
+      <input type="text" id="input" placeholder="Ask a question..." />
+      <button id="askQuestionButton">Ask</button>
     </div>
+    <div id="status"></div> <!-- Status display -->
+  </div>
 
-    <div class="chat-messages" id="chatMessages">
-        <!-- Chat messages will go here -->
-    </div>
+  <!-- JavaScript inclusion -->
+  <script>
+    const apiKey = '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';
 
-    <div class="chat-input-container">
-        <input type="text" id="input" placeholder="Ask me anything..." autocomplete="off" />
-        <button id="askQuestionButton">Ask</button>
-    </div>
-</div>
+    // Set up event listeners
+    document.getElementById('askQuestionButton').addEventListener('click', async function() {
+      const question = document.getElementById('input').value;
+      if (question.trim() !== "") {
+        await processQuestion(question);
+      }
+    });
 
-<script src="app.js"></script>
+    // Allow pressing 'Enter' to submit the question
+    document.getElementById('input').addEventListener('keypress', async function(event) {
+      if (event.key === 'Enter') {
+        const question = document.getElementById('input').value;
+        if (question.trim() !== "") {
+          await processQuestion(question);
+        }
+      }
+    });
+
+    // Process the question and get the wrong answer
+    async function processQuestion(question) {
+      addMessage('user', question);  // Add user question to chat
+      document.getElementById('input').value = '';  // Clear input field
+
+      // Set status to pending while awaiting answer
+      document.getElementById('status').textContent = "Pending...";
+
+      const wrongAnswer = await getWrongAnswer(question);
+
+      // Set status to success after receiving wrong answer
+      document.getElementById('status').textContent = "Success!";
+      addMessage('bot', wrongAnswer);  // Add bot's wrong answer to chat
+    }
+
+    // Fetch the wrong answer from OpenAI API
+    async function getWrongAnswer(question) {
+      const apiEndpoint = "https://api.openai.com/v1/chat/completions";
+
+      try {
+        const correctResponse = await fetch(apiEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-4",  // Use gpt-4 for better quality, can use gpt-3.5-turbo too
+            messages: [{ role: 'user', content: question }],
+            max_tokens: 100,
+            temperature: 0.7
+          }),
+        });
+
+        const correctAnswer = await correctResponse.json();
+        let answerText = correctAnswer.choices[0].message.content;
+
+        // Deliberately alter the answer to make it wrong
+        return makeWrongAnswer(answerText);
+      } catch (error) {
+        console.error('Error fetching the answer:', error);
+        return "Sorry, something went wrong!";
+      }
+    }
+
+    // Function to deliberately make the answer wrong
+    function makeWrongAnswer(correctAnswer) {
+      // Reverse the text and add a "wrong" message at the end
+      let wrongAnswer = correctAnswer.split('').reverse().join('');
+      wrongAnswer += " (This is wrong!)";
+      return wrongAnswer;
+    }
+
+    // Add a new message to the chat area
+    function addMessage(sender, text) {
+      const chatMessages = document.getElementById('chatMessages');
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message', sender);
+
+      const textDiv = document.createElement('div');
+      textDiv.classList.add('text');
+      textDiv.textContent = text;
+
+      messageDiv.appendChild(textDiv);
+      chatMessages.appendChild(messageDiv);
+
+      // Scroll the chat container to the bottom
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  </script>
+
 </body>
 </html>
