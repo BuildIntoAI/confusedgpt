@@ -1,0 +1,137 @@
+/* General Styles for the Chatbot */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #1a1a1b; /* Dark background */
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+/* Chat Container */
+#chatContainer {
+    width: 400px;
+    height: 600px;
+    background-color: #333;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Header (just like ChatGPT) */
+#header {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Chat Messages Area */
+#chatMessages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+/* Styling for Individual Messages */
+.message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.message.user {
+    background-color: #4e9bff;
+    color: #fff;
+    align-self: flex-end;
+}
+
+.message.bot {
+    background-color: #555;
+    color: #fff;
+    align-self: flex-start;
+}
+
+/* Input Area */
+#inputArea {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+}
+
+/* Input Field */
+#input {
+    width: 80%;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    margin-right: 10px;
+    background-color: #444;
+    color: #fff;
+    font-size: 1rem;
+}
+
+/* Send Button */
+#askQuestionButton {
+    background-color: #4e9bff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Status Message */
+.status-message {
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* Pending/Success/Failure status colors */
+.status-message.pending {
+    background-color: #ffa500;
+    color: #fff;
+}
+
+.status-message.success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.status-message.failure {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Make the chat window scrollable */
+#chatMessages {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* Scrollbar */
+#chatMessages::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chatMessages::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+#chatMessages::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
